@@ -1,38 +1,43 @@
 import { useEffect, useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-function Listado() {
-  let token = sessionStorage.getItem('token');
+function Resultados() {
+  let query = new URLSearchParams(window.location.search);
+  let keyword = query.get('keyword');
 
-  const [moviesList, setMoviesList] = useState([]);
+  const [movieResults, setMovieResults] = useState([]);
+  const { pathName } = useLocation();
 
   useEffect(() => {
-    const endPoint =
-      'https://api.themoviedb.org/3/discover/movie?api_key=322563215d6acaa5cbfa086c10b5a17f&language=es&page=1';
+    const endPoint = `https://api.themoviedb.org/3/search/movie?api_key=322563215d6acaa5cbfa086c10b5a17f&language=es-ES&page=1&include_adult=false&query=${keyword}`;
     axios
       .get(endPoint)
       .then((response) => {
-        const apiData = response.data;
-        setMoviesList(apiData.results);
+        const moviesArray = response.data.results;
+
+        if (moviesArray.length === 0) {
+          Swal.fire({ title: 'Tu busqueda no arrojó resultados' });
+        }
+
+        setMovieResults(moviesArray);
       })
       .catch((error) => {
-        Swal.fire({
-          title: 'Error',
-          text: 'Ocurrio un error al conectarse a TMDB',
-          icon: 'error',
-          confirmButtonText: 'Cool',
-        });
+        console.log(error);
       });
-  }, []);
+  }, [pathName, keyword]);
 
   return (
     <>
-      {!token && <Navigate to='/' />}
+      {/* https://api.themoviedb.org/3/search/movie?api_key=322563215d6acaa5cbfa086c10b5a17f&language=es-ES&page=1&include_adult=false&query= */}
 
+      <h2>Resultados</h2>
+      <p>Vas a buscar {keyword}</p>
+
+      {movieResults.length === 0 && <h3>No hay resultados</h3>}
       <div className='row'>
-        {moviesList.map((oneMovie, idx) => {
+        {movieResults.map((oneMovie, idx) => {
           return (
             <div className='col-3' key={idx}>
               <div className='card'>
@@ -62,4 +67,4 @@ function Listado() {
   );
 }
 
-export default Listado;
+export default Resultados;

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 function Login() {
   let navigate = useNavigate();
@@ -58,30 +58,40 @@ function Login() {
           confirmButtonText: 'Cool',
         });
         const token = res.data.token;
-        localStorage.setItem('token', token);
+        sessionStorage.setItem('token', token);
         navigate('/listado');
       });
   };
+
+  let token = sessionStorage.getItem('token');
 
   //RETURN
 
   return (
     <>
-      <h2>Formulario de Login</h2>
-      <form onSubmit={submitHandler}>
-        <label>
-          <span>Correo electrónico:</span> <br />
-          <input type='text' name='email' />
-        </label>
-        <br />
-        <label>
-          <span>Contraseña:</span>
-          <br />
-          <input type='password' name='password' />
-        </label>
-        <br />
-        <button type='submit'>Igresar</button>
-      </form>
+      {token && <Navigate to='/listado' />}
+
+      <div className='row'>
+        <div className='col-6 offset-3'>
+          <h2>Formulario de Login</h2>
+          <form onSubmit={submitHandler}>
+            <label className='form-label d-block mt-2'>
+              <span>Correo electrónico:</span> <br />
+              <input className='form-control' type='text' name='email' />
+            </label>
+
+            <label className='form-label d-block mt-2'>
+              <span>Contraseña:</span>
+
+              <input type='password' name='password' className='form-control' />
+            </label>
+
+            <button className='btn btn-success mt-2' type='submit'>
+              Ingresar
+            </button>
+          </form>
+        </div>
+      </div>
     </>
   );
 }
