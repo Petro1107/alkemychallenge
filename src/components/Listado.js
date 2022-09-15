@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import '../App.css';
 
-function Listado() {
+function Listado(props) {
   let token = sessionStorage.getItem('token');
 
   const [moviesList, setMoviesList] = useState([]);
@@ -41,6 +42,13 @@ function Listado() {
                   className='card-img-top'
                   alt='...'
                 />
+                <button
+                  className='favourite-btn'
+                  onClick={props.addOrRemoveFromFavs}
+                  data-movie-id={oneMovie.id}
+                >
+                  🤍
+                </button>
                 <div className='card-body'>
                   <h5 className='card-title'>{oneMovie.title}</h5>
                   <p className='card-text'>

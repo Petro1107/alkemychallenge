@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import '../App.css';
 
 function Resultados() {
   let query = new URLSearchParams(window.location.search);
@@ -46,6 +47,7 @@ function Resultados() {
                   className='card-img-top'
                   alt='...'
                 />
+                <button className='favourite-btn'></button>
                 <div className='card-body'>
                   <h5 className='card-title'>{oneMovie.title}</h5>
                   <p className='card-text'>
